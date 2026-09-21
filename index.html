@@ -1,0 +1,716 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Antrenman Programı | Mobil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #f97316;
+            --accent-hover: #ea580c;
+            --push: #f97316;
+            --pull: #3b82f6;
+            --legs: #10b981;
+            --rest: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        header {
+            padding: 24px 20px 16px;
+            background: linear-gradient(to bottom, #020617, #0f172a);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        .user-badge {
+            background-color: var(--card-bg);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            border: 1px solid #334155;
+        }
+
+        /* Nav Scrollbar Hide */
+        .days-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 12px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .days-nav::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .day-btn {
+            background-color: var(--card-bg);
+            border: 1px solid #334155;
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .day-btn.active {
+            background-color: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        main {
+            padding: 0 20px;
+            margin-top: 10px;
+        }
+
+        .day-content {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .day-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .day-header {
+            margin-bottom: 20px;
+        }
+
+        .day-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .day-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 1px solid #1e293b;
+        }
+
+        .card-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-bottom: 2px solid #334155;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag.push { background-color: rgba(249, 115, 22, 0.2); color: #fdba74; }
+        .tag.pull { background-color: rgba(59, 130, 246, 0.2); color: #93c5fd; }
+        .tag.legs { background-color: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+        .tag.core { background-color: rgba(236, 72, 153, 0.2); color: #f9a8d4; }
+        .tag.rest { background-color: rgba(100, 116, 139, 0.2); color: #cbd5e1; }
+
+        .exercise-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .exercise-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0f172a;
+            padding: 10px 12px;
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .detail-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .rest-card {
+            text-align: center;
+            padding: 40px 20px;
+            border: 2px dashed #334155;
+            background-color: transparent;
+        }
+
+        .rest-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* Tips Section */
+        .tips-section {
+            margin-top: 30px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid var(--accent);
+        }
+        .tips-section h3 {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+        .tips-section ul {
+            padding-left: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .tips-section li { margin-bottom: 6px; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <h1>Gym<span>App</span></h1>
+            <div class="user-badge">Ali & Kanka Mode</div>
+        </div>
+        <div class="days-nav" id="nav-container">
+            <button class="day-btn active" data-target="day1">1. Gün</button>
+            <button class="day-btn" data-target="day2">2. Gün</button>
+            <button class="day-btn" data-target="day3">3. Gün</button>
+            <button class="day-btn" data-target="day4">4. Gün</button>
+            <button class="day-btn" data-target="day5">5. Gün</button>
+            <button class="day-btn" data-target="day6">6. Gün</button>
+            <button class="day-btn" data-target="day7">7. Gün</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- DAY 1: PUSH -->
+        <div id="day1" class="day-content active">
+            <div class="day-header">
+                <div class="day-title">İTİŞ (Push) Günü</div>
+                <div class="day-subtitle">Göğüs, Omuz ve Arka Kol hedeflenir.</div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=600&auto=format&fit=crop" alt="Göğüs" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag push">Göğüs</span></div>
+                    <div class="exercise-title">1. Bench Press / Incline Press</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yatay veya yukarı eğimli sehpada itiş.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" alt="Omuz" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag push">Omuz</span></div>
+                    <div class="exercise-title">2. Omuz Press & Lateral Raise</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yukarı itiş ve dambıl ile yana açış.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Arka Kol" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag push">Arka Kol (Triceps)</span></div>
+                    <div class="exercise-title">3. Pushdown & Overhead Ext.</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Kabloda aşağı itiş ve baş üstü uzatma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2: PULL -->
+        <div id="day2" class="day-content">
+            <div class="day-header">
+                <div class="day-title">ÇEKİŞ (Pull) Günü</div>
+                <div class="day-subtitle">Sırt, Kanat, Arka Omuz ve Biceps hedeflenir.</div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1598971639058-fab354c28119?q=80&w=600&auto=format&fit=crop" alt="Sırt" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Sırt & Kanat</span></div>
+                    <div class="exercise-title">1. Lat Pulldown & Seated Row</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yukarıdan göğse çekiş ve oturarak karna çekiş + 1 Barfiks/PullDown varyasyonu.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">3 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop" alt="Arka Omuz" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Arka Omuz</span></div>
+                    <div class="exercise-title">2. Face Pull / Reverse Pec Dec</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yüze doğru çekiş veya ters kelebek makinesi.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">1 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3-4</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">12-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop" alt="Ön Kol" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Ön Kol (Biceps)</span></div>
+                    <div class="exercise-title">3. Dumbbell Curl & Cable Curl</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Serbest ağırlık ve kablo ile pazu sıkıştırma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3: LEGS 1 -->
+        <div id="day3" class="day-content">
+            <div class="day-header">
+                <div class="day-title">BACAK 1 & Karın</div>
+                <div class="day-subtitle">Ön bacak odaklı güç antrenmanı.</div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?q=80&w=600&auto=format&fit=crop" alt="Bacak" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag legs">Ön Bacak</span></div>
+                    <div class="exercise-title">1. Leg Press & Leg Extension</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Makinede itiş ve ön bacak uzatma (+Lunge).</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">3 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag legs">Arka Bacak & Kalf</span></div>
+                    <div class="exercise-title">2. Leg Curl & Calf Raise</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Makinede arka bacak bükme ve parmak ucu yükselme.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">1+1 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">12-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag core">Karın (Core)</span></div>
+                    <div class="exercise-title">3. Plank & Crunch (Mekik)</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Merkez bölgesi sıkılaştırma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">Max/Tükeniş</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 4: REST -->
+        <div id="day4" class="day-content">
+            <div class="day-header">
+                <div class="day-title">Dinlenme Günü</div>
+                <div class="day-subtitle">Kasların toparlanması için kritik gün.</div>
+            </div>
+            <div class="exercise-card rest-card">
+                <div class="rest-icon">🔋</div>
+                <h3 style="margin-bottom: 8px;">Toparlanma Vakti</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Kas antrenmanda değil, dinlenirken büyür. Bugün bol su iç ve protein alımına dikkat et.</p>
+            </div>
+        </div>
+
+        <!-- DAY 5: UPPER -->
+        <div id="day5" class="day-content">
+            <div class="day-header">
+                <div class="day-title">ÜST VÜCUT</div>
+                <div class="day-subtitle">Tüm üst bölgenin ikinci uyarımı.</div>
+            </div>
+            
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=600&auto=format&fit=crop" alt="Üst Vücut" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags">
+                        <span class="tag push">2 Göğüs</span>
+                        <span class="tag pull">2 Sırt</span>
+                    </div>
+                    <div class="exercise-title">1. Göğüs & Sırt Kombinasyonu</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Dumbbell Press + Cable Fly (Göğüs) ve T-Bar Row + Pulldown (Sırt).</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags">
+                        <span class="tag push">1 Omuz</span>
+                        <span class="tag pull">2 Kol</span>
+                    </div>
+                    <div class="exercise-title">2. Omuz ve Kollar</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Lateral Raise (Omuz), 1 Biceps Hareketi, 1 Triceps Hareketi.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=600&auto=format&fit=crop" alt="Omuz" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag push">Omuz</span></div>
+                    <div class="exercise-title">2. Omuz Press & Lateral Raise</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yukarı itiş ve dambıl ile yana açış.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Arka Kol" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag push">Arka Kol (Triceps)</span></div>
+                    <div class="exercise-title">3. Pushdown & Overhead Ext.</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Kabloda aşağı itiş ve baş üstü uzatma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 2: PULL -->
+        <div id="day2" class="day-content">
+            <div class="day-header">
+                <div class="day-title">ÇEKİŞ (Pull) Günü</div>
+                <div class="day-subtitle">Sırt, Kanat, Arka Omuz ve Biceps hedeflenir.</div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1598971639058-fab354c28119?q=80&w=600&auto=format&fit=crop" alt="Sırt" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Sırt & Kanat</span></div>
+                    <div class="exercise-title">1. Lat Pulldown & Seated Row</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yukarıdan göğse çekiş ve oturarak karna çekiş + 1 Barfiks/PullDown varyasyonu.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">3 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=600&auto=format&fit=crop" alt="Arka Omuz" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Arka Omuz</span></div>
+                    <div class="exercise-title">2. Face Pull / Reverse Pec Dec</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Yüze doğru çekiş veya ters kelebek makinesi.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">1 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3-4</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">12-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=600&auto=format&fit=crop" alt="Ön Kol" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag pull">Ön Kol (Biceps)</span></div>
+                    <div class="exercise-title">3. Dumbbell Curl & Cable Curl</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Serbest ağırlık ve kablo ile pazu sıkıştırma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 3: LEGS 1 -->
+        <div id="day3" class="day-content">
+            <div class="day-header">
+                <div class="day-title">BACAK 1 & Karın</div>
+                <div class="day-subtitle">Ön bacak odaklı güç antrenmanı.</div>
+            </div>
+
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?q=80&w=600&auto=format&fit=crop" alt="Bacak" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag legs">Ön Bacak</span></div>
+                    <div class="exercise-title">1. Leg Press & Leg Extension</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Makinede itiş ve ön bacak uzatma (+Lunge).</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">3 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">10-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag legs">Arka Bacak & Kalf</span></div>
+                    <div class="exercise-title">2. Leg Curl & Calf Raise</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Makinede arka bacak bükme ve parmak ucu yükselme.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">1+1 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">12-15</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag core">Karın (Core)</span></div>
+                    <div class="exercise-title">3. Plank & Crunch (Mekik)</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Merkez bölgesi sıkılaştırma.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">2 Adet</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">Max/Tükeniş</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 4: REST -->
+        <div id="day4" class="day-content">
+            <div class="day-header">
+                <div class="day-title">Dinlenme Günü</div>
+                <div class="day-subtitle">Kasların toparlanması için kritik gün.</div>
+            </div>
+            <div class="exercise-card rest-card">
+                <div class="rest-icon">🔋</div>
+                <h3 style="margin-bottom: 8px;">Toparlanma Vakti</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Kas antrenmanda değil, dinlenirken büyür. Bugün bol su iç ve protein alımına dikkat et.</p>
+            </div>
+        </div>
+
+        <!-- DAY 5: UPPER -->
+        <div id="day5" class="day-content">
+            <div class="day-header">
+                <div class="day-title">ÜST VÜCUT</div>
+                <div class="day-subtitle">Tüm üst bölgenin ikinci uyarımı.</div>
+            </div>
+            
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=600&auto=format&fit=crop" alt="Üst Vücut" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags">
+                        <span class="tag push">2 Göğüs</span>
+                        <span class="tag pull">2 Sırt</span>
+                    </div>
+                    <div class="exercise-title">1. Göğüs & Sırt Kombinasyonu</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Dumbbell Press + Cable Fly (Göğüs) ve T-Bar Row + Pulldown (Sırt).</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="exercise-card">
+                <div class="card-body">
+                    <div class="card-tags">
+                        <span class="tag push">1 Omuz</span>
+                        <span class="tag pull">2 Kol</span>
+                    </div>
+                    <div class="exercise-title">2. Omuz ve Kollar</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Lateral Raise (Omuz), 1 Biceps Hareketi, 1 Triceps Hareketi.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3'er</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">12-15</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 6: LEGS 2 -->
+        <div id="day6" class="day-content">
+            <div class="day-header">
+                <div class="day-title">ALT VÜCUT 2</div>
+                <div class="day-subtitle">Arka bacak ağırlıklı alt vücut günü.</div>
+            </div>
+            
+            <div class="exercise-card">
+                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=600&auto=format&fit=crop" alt="Deadlift" class="card-img">
+                <div class="card-body">
+                    <div class="card-tags"><span class="tag legs">Arka & Ön Bacak</span></div>
+                    <div class="exercise-title">1. RDL, Squat & Curl</div>
+                    <p style="font-size: 13px; color: var(--text-muted);">2 Arka Bacak (Örn: Romanian Deadlift), 2 Ön Bacak (Örn: Squat), 1 Kalf.</p>
+                    <div class="exercise-details">
+                        <div class="detail-item"><span class="detail-label">Hareket</span><span class="detail-value">5 Toplam</span></div>
+                        <div class="detail-item"><span class="detail-label">Set</span><span class="detail-value">3-4</span></div>
+                        <div class="detail-item"><span class="detail-label">Tekrar</span><span class="detail-value">8-12</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAY 7: REST -->
+        <div id="day7" class="day-content">
+            <div class="day-header">
+                <div class="day-title">Dinlenme Günü</div>
+                <div class="day-subtitle">Haftayı bitirip toparlanma zamanı.</div>
+            </div>
+            <div class="exercise-card rest-card">
+                <div class="rest-icon">🛌</div>
+                <h3 style="margin-bottom: 8px;">Off Day</h3>
+                <p style="font-size: 13px; color: var(--text-muted);">Bu gece güzel uyu, yarın 1. Döngüden tekrar İtiş ile başlıyoruz!</p>
+            </div>
+        </div>
+
+        <div class="tips-section">
+            <h3>⚡ Altın Kurallar</h3>
+            <ul>
+                <li>Isınmadan asla ağır kilolara girme (5dk yürü, eklemleri çevir).</li>
+                <li>Hareketi doğru açıda yap, ağırlığı savurma. Egonu kapıda bırak.</li>
+                <li>Set arası molalarını telefonla oynayarak uzatma (Maksimum 60-90 sn).</li>
+            </ul>
+        </div>
+
+    </main>
+
+    <script>
+        const buttons = document.querySelectorAll('.day-btn');
+        const contents = document.querySelectorAll('.day-content');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                buttons.forEach(b => b.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+
+                // Add active class to clicked button
+                btn.classList.add('active');
+
+                // Show target content
+                const targetId = btn.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+
+                // Scroll nav to keep button in view smoothly
+                btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            });
+        });
+    </script>
+</body>
+</html>
